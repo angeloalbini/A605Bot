@@ -13,7 +13,7 @@ app = Flask(__name__)
 bot_app = Application.builder().token(TOKEN).build()
 
 # === Handler untuk /start ===
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     print(f"✅ /start dari @{update.effective_user.username}")
     await update.message.reply_text(f"Halo {update.effective_user.first_name}, bot siap patrol 24/7! 🛡️")
 
