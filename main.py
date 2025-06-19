@@ -31,5 +31,5 @@ if __name__ == "__main__":
     bot_app.run_webhook(
         listen="0.0.0.0",
         port=PORT,
-        webhook_url=f"https://{os.environ.get('RENDER_EXTERNAL_URL')}{WEBHOOK_PATH}"
+        webhook_url=f"https://{os.environ.get('https://a605bot.onrender.com')}{WEBHOOK_PATH}"
     )
