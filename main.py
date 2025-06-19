@@ -1,37 +1,34 @@
 import os
-import asyncio
 from flask import Flask, request
 from telegram import Update
 from telegram.ext import Application, CommandHandler, ContextTypes
+import asyncio
 
-# === ENVIRONMENT ===
+# === Inisialisasi ===
 TOKEN = os.getenv("TOKEN")
-
-# === FLASK APP ===
+PORT = int(os.environ.get("PORT", 5000))
 app = Flask(__name__)
 bot_app = Application.builder().token(TOKEN).build()
 
-# === HANDLERS ===
+# === Handler /start ===
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    print(f"🔔 /start dari {update.effective_user.username}")
-    await update.message.reply_text(
-        f"Halo {update.effective_user.first_name}, bot siap patrol 24/7! 📋"
-    )
+    print(f"✅ /start dari @{update.effective_user.username}")
+    await update.message.reply_text(f"Halo {update.effective_user.first_name}, bot siap patrol 24/7! 🛡️")
 
 bot_app.add_handler(CommandHandler("start", start))
 
-# === WEBHOOK ROUTE ===
+# === Route webhook: pakai ASYNC dan AWAIT ===
 @app.route("/webhook", methods=["POST"])
-def webhook():
+async def webhook():
     update = Update.de_json(request.get_json(force=True), bot_app.bot)
-    asyncio.create_task(bot_app.update_queue.put(update))
+    await bot_app.process_update(update)
     return "OK", 200
 
 @app.route("/")
-def index():
-    return "Bot is up ✅", 200
+def home():
+    return "Bot is running ✅", 200
 
-# === RUN ===
+# === Jalankan ===
 if __name__ == "__main__":
-    bot_app.initialize()
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+    asyncio.run(bot_app.initialize())  # WAJIB
+    app.run(host="0.0.0.0", port=PORT)
