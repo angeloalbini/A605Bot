@@ -21,6 +21,7 @@ def webhook():
 
 # Handler /start
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    print(f"🔔 /start dari {update.effective_user.username}")
     await update.message.reply_text(f"Halo {update.effective_user.first_name}, bot aktif 24/7 🚀")
 
 bot_app.add_handler(CommandHandler("start", start))
